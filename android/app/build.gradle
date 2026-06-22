@@ -116,4 +116,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation project(':gvr_common')
+    implementation project(':arcore_client')
+    implementation project(':react_viro')
 }

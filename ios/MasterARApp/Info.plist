@@ -55,5 +55,20 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires camera access to track AR image markers and overlay video experiences.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>masterar</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>masterar</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
