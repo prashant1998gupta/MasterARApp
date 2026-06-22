@@ -1,0 +1,26 @@
+{
+  "appclips": {
+    "apps": [
+      "REPLACE_WITH_TEAM_ID.org.reactjs.native.example.MasterARApp.Clip"
+    ]
+  },
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "REPLACE_WITH_TEAM_ID.org.reactjs.native.example.MasterARApp"
+        ],
+        "components": [
+          {
+            "/": "/e/*",
+            "comment": "Open a campaign in the installed full app."
+          },
+          {
+            "/": "/experience/*",
+            "comment": "Legacy campaign URL format."
+          }
+        ]
+      }
+    ]
+  }
+}

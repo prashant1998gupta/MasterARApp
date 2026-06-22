@@ -1,87 +1,127 @@
-# Option 2: The "Master" React Native App Clip
-## Architecture & Setup Guide
+# Master AR: Native-Quality Instant Entry
 
-This document explains the architecture for building a single "Master" AR application using React Native and ViroReact. This architecture allows you to service multiple clients instantly without releasing a new app to the App Store for each client.
+## Product goal
 
-### Core Architecture
-1. **The "Master" App:** A single React Native app published to the App Store / Play Store.
-2. **Deep Linking (Routing):** The app is configured to listen to Universal Links (e.g., `https://yourdomain.com/ar?client=wedding123`).
-3. **Dynamic Content:** Instead of packaging 3D models or videos inside the app (which would exceed the 15MB limit), the app downloads the specific client's tracking image and green-screen video from a cloud server based on the `client` ID in the URL.
-4. **ViroReact (AR Engine):** The app feeds the downloaded image and video URLs into the ViroReact engine (`<ViroARImageMarker>`) to trigger the AR experience.
+Open an AR campaign from a QR code or link, recognize printed artwork, and keep
+video or 3D content stably anchored to it. Campaign assets are downloaded at
+runtime so one player can serve many customers.
 
----
+The quality target is native image tracking (ARKit on iOS and ARCore on
+Android), not a Unity WebGL build.
 
-### Step 1: Initializing ViroReact
-Your React Native project (`MasterARApp`) needs the ViroReact library to handle AR tracking.
+## Platform reality in 2026
 
-1. Navigate to the project directory:
-   `cd MasterARApp`
-2. Install the new community version of ViroReact (which supports latest React Native versions and New Architecture):
-   `npm install @reactvision/react-viro`
-3. Link the native dependencies for iOS (requires a Mac):
-   `cd ios && pod install`
+| Platform | Native AR without a normal install | Production path |
+| --- | --- | --- |
+| iOS | Yes | A small native Swift/ARKit App Clip launched by an App Clip Code, QR code, or universal link |
+| Android | No longer available | Google Play Instant was retired in December 2025; use a normal ARCore-capable app or an install-free WebAR fallback |
 
----
+Google's retirement notice:
+<https://developer.android.com/topic/google-play-instant/overview>
 
-### Step 2: Setting up Deep Linking
-To make the app "dynamic", we need it to open from a QR code and read the URL.
+Apple App Clip guidance:
+<https://developer.apple.com/documentation/appclip>
 
-1. In `App.tsx`, we have already pre-configured the React Native `Linking` API to automatically listen to incoming URLs.
-2. You need to configure Universal Links (iOS) and App Links (Android) on your developer accounts so that scanning a QR code opens your specific App Clip/Instant App.
+This means a single React Native "instant app" binary cannot provide native AR
+on both platforms. The launch URL can still be shared across both platforms,
+but it must route to different delivery surfaces.
 
----
+## Recommended architecture
 
-### Step 3: Dynamic Image Tracking (The Code)
-Your `App.tsx` has been configured with the dynamic tracking logic. Here is how it functions:
+```text
+QR / NFC / campaign link
+          |
+          v
+https://ar.example.com/e/{campaignId}
+          |
+          +--> iPhone: native ARKit App Clip
+          |
+          +--> Android with app: verified App Link -> native AR player
+          |
+          +--> Android without app: install page or WebAR fallback
+```
 
-1. **Preset and custom loaders:** You can type any client ID into the text field or press the presets to test without setting up deep linking.
-2. **Dynamic Target Registration:**
-   ```typescript
-   ViroARTrackingTargets.createTargets({
-     dynamicTarget: {
-       source: { uri: config.targetImageUrl },
-       orientation: 'Up',
-       physicalWidth: config.physicalWidth,
-     },
-   });
-   ```
-3. **AR Scene Rendering:**
-   ```typescript
-   <ViroARImageMarker target="dynamicTarget">
-     <ViroVideo
-       source={{ uri: config.videoUrl }}
-       loop={true}
-       position={[0, 0, 0]}
-       scale={[1, 1, 1]}
-       rotation={[-90, 0, 0]}
-     />
-   </ViroARImageMarker>
-   ```
+### 1. iOS App Clip
 
----
+Build this target in Swift with ARKit/RealityKit. Keeping React Native and Viro
+out of the App Clip reduces launch time and binary size. The App Clip should do
+one job only:
 
-### Step 4: Configuring the iOS App Clip
-The magic of an App Clip is that it bypasses the App Store.
+1. Read the campaign ID from the invocation URL.
+2. Fetch the campaign configuration.
+3. Download and validate the tracking image and overlay asset.
+4. Create an `ARReferenceImage` using the supplied physical width.
+5. Start an `ARWorldTrackingConfiguration` image-tracking session.
+6. Attach an `AVPlayer` video material or RealityKit model to the image anchor.
 
-1. Open `MasterARApp/ios/MasterARApp.xcworkspace` in Xcode.
-2. Go to **File > New > Target...** and select **App Clip**.
-3. Name it `MasterARAppClip`.
-4. Ensure the App Clip target is added to your Podfile and run `pod install` again.
-5. In the App Clip's `Info.plist`, configure the Associated Domains so it knows which URLs trigger it.
-6. **CRITICAL:** Ensure your final uncompressed binary is strictly under **15 MB**. Since we are downloading images/videos dynamically, you only need the React Native bundle and ViroReact framework inside the binary.
+The full iOS app can keep the React Native/Viro experience, but it must contain
+the same core experience offered by its App Clip.
 
----
+### 2. Android native player
 
-### Step 5: Configuring the Android Instant App
-Google Play Instant allows users to tap a link and instantly open a small slice of your app.
+Keep the current React Native/Viro app for the first native Android release, or
+replace only its AR view with a small Kotlin/ARCore module if profiling shows
+tracking or startup problems. A verified Android App Link opens the exact
+campaign after the user installs the app.
 
-1. Open `MasterARApp/android` in Android Studio.
-2. Convert your base application module to support Instant Apps by adding `android:targetSandboxVersion="2"` to the `AndroidManifest.xml`.
-3. In your `build.gradle`, add the Instant App dependencies.
-4. **CRITICAL:** Similar to iOS, the total download size must be under 15 MB. Use ProGuard/R8 to aggressively shrink the code.
+There is no supported Play Store mechanism in 2026 that launches this native
+ARCore code without installing it.
 
----
+### 3. Campaign API and CDN
 
-### Next Steps for Development
-1. Focus entirely on running the React Native app locally first. Test it on a physical device using `npm run android` or `npm run ios`.
-2. Once the dynamic tracking works locally using the presets/inputs, proceed to Step 4 and Step 5 to create the App Clip / Instant App slices.
+The API should return a versioned, immutable configuration. Example:
+
+```json
+{
+  "schemaVersion": 1,
+  "id": "postcard",
+  "name": "India Postcard Experience",
+  "targetImageUrl": "https://cdn.example.com/campaigns/postcard/target.jpg",
+  "targetImageSha256": "...",
+  "physicalWidthMeters": 0.15,
+  "videoUrl": "https://cdn.example.com/campaigns/postcard/overlay.mp4",
+  "videoAspectRatio": 1.7778,
+  "updatedAt": "2026-06-22T00:00:00Z"
+}
+```
+
+Images, videos, and models belong in object storage behind a CDN. The API must
+not return arbitrary URLs from untrusted campaign authors without validation.
+
+## Current repository status
+
+The repository contains the installed React Native/Viro player and already
+supports:
+
+- dynamic image-target registration;
+- remote video overlays;
+- campaign selection by client ID;
+- custom-scheme and web-link parsing;
+- a native Swift/ARKit App Clip target using `ARImageTrackingConfiguration`;
+- dynamic `ARReferenceImage` creation and a looping RealityKit video material.
+
+It does not yet contain:
+
+- a real campaign API;
+- production Apple domains, bundle IDs, signing, or an AASA file;
+- a real Android domain or `assetlinks.json`;
+- production signing and physical-device performance tests.
+
+## Delivery order
+
+1. Validate the built-in postcard campaign on a physical iPhone using the
+   native App Clip target.
+2. Make the same campaign reliable in the installed iOS and Android app.
+3. Add the campaign API, CDN caching, integrity checks, and analytics.
+4. Configure the production domain, AASA, App Clip experience, Android App Links, and
+   store signing.
+5. Decide whether Android users without the app see an install page or a lower-
+   fidelity WebAR fallback.
+
+## Values needed before production linking
+
+- production domain, such as `ar.example.com`;
+- Apple Developer Team ID and final app/App Clip bundle identifiers;
+- Android application ID and release signing SHA-256 fingerprint;
+- campaign API base URL and CDN origin;
+- oldest iOS/Android versions to support.

@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  SafeAreaView,
   ActivityIndicator,
   Linking,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ViroARSceneNavigator,
   ViroARScene,
@@ -27,6 +27,8 @@ interface ClientARConfig {
   targetImageUrl: string;
   videoUrl: string;
   physicalWidth: number; // in meters, e.g. 0.15 for a postcard
+  videoAspectRatio?: number;
+  trackingTargetName?: string;
 }
 
 // Preset configurations for instant local testing and fallback
@@ -37,6 +39,7 @@ const PRESET_CLIENTS: Record<string, ClientARConfig> = {
     targetImageUrl: 'https://raw.githubusercontent.com/prashant1998gupta/AR_ImageTracking/main/Assets/AR_Assets/India%20Post%20card/Postcard_Target_Image.jpg.jpeg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     physicalWidth: 0.15,
+    videoAspectRatio: 16 / 9,
   },
   wedding: {
     id: 'wedding',
@@ -44,33 +47,60 @@ const PRESET_CLIENTS: Record<string, ClientARConfig> = {
     targetImageUrl: 'https://raw.githubusercontent.com/prashant1998gupta/AR_ImageTracking/main/Assets/AR_Assets/India%20Post%20card/Postcard_Target_Image.jpg.jpeg',
     videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     physicalWidth: 0.12,
+    videoAspectRatio: 16 / 9,
   },
+};
+
+export const getCampaignIdFromUrl = (url: string) => {
+  const query = url.split('?')[1]?.split('#')[0];
+  const queryValue = query
+    ?.split('&')
+    .map(pair => pair.split('='))
+    .find(([key]) => {
+      const decodedKey = decodeURIComponent(key);
+      return decodedKey === 'client' || decodedKey === 'campaign';
+    })
+    ?.slice(1)
+    .map(value => decodeURIComponent(value.replace(/\+/g, ' ')))
+    .join('=');
+
+  if (queryValue) {
+    return queryValue;
+  }
+
+  const pathMatch = url.match(/\/(?:e|experience)\/([^/?#]+)/i);
+  return pathMatch?.[1] ? decodeURIComponent(pathMatch[1]) : undefined;
 };
 
 // AR Scene Component - Runs inside ViroARSceneNavigator
 // It receives the active config via sceneNavigator's shared props
-const DynamicARScene = (props: any) => {
-  const config: ClientARConfig | null = props.sceneNavigator.viroAppProps?.config;
-
-  if (!config) {
-    return null;
-  }
+const DynamicARScene = (props?: any) => {
+  const config: ClientARConfig | null =
+    props?.sceneNavigator?.viroAppProps?.config ?? null;
+  const updateTrackingStatus =
+    props?.sceneNavigator?.viroAppProps?.updateTrackingStatus;
+  const videoAspectRatio = config?.videoAspectRatio ?? 16 / 9;
 
   return (
     <ViroARScene>
       <ViroAmbientLight color="#ffffff" />
-      {/* ViroARImageMarker tracks the registered "dynamicTarget" */}
-      <ViroARImageMarker target="dynamicTarget">
-        <ViroVideo
-          source={{ uri: config.videoUrl }}
-          loop={true}
-          position={[0, 0, 0]}
-          scale={[1, 1, 1]}
-          rotation={[-90, 0, 0]} // Lay flat on top of the image marker
-          dragType="FixedToPlane"
-          onDrag={() => {}}
-        />
-      </ViroARImageMarker>
+      {config && (
+        // ViroARImageMarker tracks the registered "dynamicTarget".
+        <ViroARImageMarker
+          target={config.trackingTargetName ?? 'dynamicTarget'}
+          onAnchorFound={() => updateTrackingStatus?.('Image found — playing experience')}
+          onAnchorRemoved={() => updateTrackingStatus?.('Point the camera at the full image')}
+        >
+          <ViroVideo
+            source={{ uri: config.videoUrl }}
+            loop={true}
+            width={config.physicalWidth}
+            height={config.physicalWidth / videoAspectRatio}
+            position={[0, 0.001, 0]}
+            rotation={[-90, 0, 0]} // Lay flat on top of the image marker
+          />
+        </ViroARImageMarker>
+      )}
     </ViroARScene>
   );
 };
@@ -80,33 +110,24 @@ export default function App() {
   const [activeConfig, setActiveConfig] = useState<ClientARConfig | null>(null);
   const [customClientId, setCustomClientId] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [trackingStatus, setTrackingStatus] = useState(
+    'Point the camera at the full printed image',
+  );
 
   // 1. Deep linking listener
   useEffect(() => {
     // Process deep link URL
     const handleDeepLink = async (url: string | null) => {
       if (!url) return;
-      
+
       console.log('Received deep link URL:', url);
-      try {
-        // Example URL: masterar://experience?client=postcard
-        // Example URL: https://ar.yourdomain.com/experience?client=wedding
-        const parsedUrl = new URL(url);
-        const client = parsedUrl.searchParams.get('client');
-        if (client) {
-          loadClientExperience(client);
-        } else {
-          Alert.alert('Invalid Link', 'No client parameter found in the link.');
-        }
-      } catch (error) {
-        // Fallback simple parsing for non-standard URI schemes
-        const clientParam = url.split('client=')[1];
-        if (clientParam) {
-          const client = clientParam.split('&')[0];
-          loadClientExperience(client);
-        } else {
-          Alert.alert('Parsing Error', 'Failed to parse deep link: ' + url);
-        }
+      // Works for both masterar:// and https:// invocation URLs without relying
+      // on the incomplete URLSearchParams implementation on older RN runtimes.
+      const client = getCampaignIdFromUrl(url);
+      if (client) {
+        loadClientExperience(client);
+      } else {
+        Alert.alert('Invalid Link', 'No client parameter found in the link.');
       }
     };
 
@@ -129,35 +150,66 @@ export default function App() {
     setStatusMessage('Fetching experience settings...');
 
     try {
+      const normalizedClientId = clientId.trim().toLowerCase();
+      if (!/^[a-z0-9_-]{1,80}$/.test(normalizedClientId)) {
+        throw new Error('The campaign ID contains unsupported characters.');
+      }
+
       let config: ClientARConfig;
 
       // Check if it's one of our built-in test presets
-      if (PRESET_CLIENTS[clientId]) {
-        config = PRESET_CLIENTS[clientId];
+      if (PRESET_CLIENTS[normalizedClientId]) {
+        config = PRESET_CLIENTS[normalizedClientId];
       } else {
         // Fetch config from your remote SaaS API server
-        // Example structure of remote endpoint: https://api.yourdomain.com/clients/{clientId}
-        setStatusMessage(`Downloading config for client: ${clientId}...`);
-        const response = await fetch(`https://api.yourdomain.com/clients/${clientId}`);
+        // Shared endpoint used by the full app and App Clip.
+        setStatusMessage(`Downloading config for client: ${normalizedClientId}...`);
+        const response = await fetch(
+          `https://ar.yourdomain.com/api/clients/${encodeURIComponent(normalizedClientId)}`,
+        );
         if (!response.ok) {
           throw new Error(`Client configuration not found on server (HTTP ${response.status})`);
         }
-        config = await response.json();
+        const remoteConfig = (await response.json()) as ClientARConfig & {
+          physicalWidthMeters?: number;
+        };
+        config = {
+          ...remoteConfig,
+          physicalWidth:
+            remoteConfig.physicalWidth ?? remoteConfig.physicalWidthMeters ?? 0,
+          videoAspectRatio: remoteConfig.videoAspectRatio ?? 16 / 9,
+        };
+      }
+
+      if (
+        !config.id ||
+        !config.name ||
+        !/^https:\/\//i.test(config.targetImageUrl) ||
+        !/^https:\/\//i.test(config.videoUrl) ||
+        !Number.isFinite(config.physicalWidth) ||
+        config.physicalWidth < 0.02 ||
+        config.physicalWidth > 5
+      ) {
+        throw new Error('The campaign server returned an invalid configuration.');
       }
 
       setStatusMessage('Registering AR tracking targets...');
-      
+
+      const trackingTargetName = `campaign_${normalizedClientId}`;
+
       // Dynamic target registration
       // ViroARTrackingTargets downloads the target image directly from the URL
       ViroARTrackingTargets.createTargets({
-        dynamicTarget: {
+        [trackingTargetName]: {
           source: { uri: config.targetImageUrl },
           orientation: 'Up',
           physicalWidth: config.physicalWidth,
+          type: 'Image',
         },
       });
 
-      setActiveConfig(config);
+      setActiveConfig({...config, trackingTargetName});
+      setTrackingStatus('Point the camera at the full printed image');
       
       // Give a tiny buffer for target creation
       setTimeout(() => {
@@ -224,8 +276,8 @@ export default function App() {
 
           {/* Deep link info */}
           <View style={styles.infoCard}>
-            <Text style={styles.infoTitle}>Deep Link Testing URL format:</Text>
-            <Text style={styles.infoCode}>masterar://experience?client=postcard</Text>
+            <Text style={styles.infoTitle}>Campaign link format:</Text>
+            <Text style={styles.infoCode}>https://ar.yourdomain.com/e/postcard</Text>
           </View>
         </View>
       )}
@@ -242,7 +294,11 @@ export default function App() {
           {/* ViroARSceneNavigator loads the DynamicARScene */}
           <ViroARSceneNavigator
             initialScene={{ scene: DynamicARScene }}
-            viroAppProps={{ config: activeConfig }}
+            viroAppProps={{
+              config: activeConfig,
+              updateTrackingStatus: setTrackingStatus,
+            }}
+            numberOfTrackedImages={1}
             style={StyleSheet.absoluteFillObject}
           />
 
@@ -250,7 +306,7 @@ export default function App() {
           <View style={styles.hudOverlay}>
             <Text style={styles.hudClientName}>{activeConfig?.name}</Text>
             <Text style={styles.hudInstructions}>
-              Point camera at the target image to play video
+              {trackingStatus}
             </Text>
           </View>
 
@@ -258,6 +314,9 @@ export default function App() {
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => {
+              if (activeConfig?.trackingTargetName) {
+                ViroARTrackingTargets.deleteTarget(activeConfig.trackingTargetName);
+              }
               setAppState('IDLE');
               setActiveConfig(null);
             }}

@@ -11,7 +11,38 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		A10000000000000000000011 /* AppClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* AppClipApp.swift */; };
+		A10000000000000000000012 /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* Campaign.swift */; };
+		A10000000000000000000013 /* AppClipExperienceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* AppClipExperienceModel.swift */; };
+		A10000000000000000000014 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000007 /* ContentView.swift */; };
+		A10000000000000000000015 /* NativeImageTrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000008 /* NativeImageTrackingView.swift */; };
+		A10000000000000000000016 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000B /* Assets.xcassets */; };
+		A10000000000000000000017 /* MasterARAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* MasterARAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A10000000000000000000031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A10000000000000000000001;
+			remoteInfo = MasterARAppClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A10000000000000000000024 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				A10000000000000000000017 /* MasterARAppClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* MasterARApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MasterARApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -23,6 +54,16 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-MasterARApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MasterARApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = MasterARApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MasterARApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A10000000000000000000002 /* MasterARAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MasterARAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000004 /* AppClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipApp.swift; sourceTree = "<group>"; };
+		A10000000000000000000005 /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
+		A10000000000000000000006 /* AppClipExperienceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipExperienceModel.swift; sourceTree = "<group>"; };
+		A10000000000000000000007 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A10000000000000000000008 /* NativeImageTrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeImageTrackingView.swift; sourceTree = "<group>"; };
+		A10000000000000000000009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1000000000000000000000A /* MasterARAppClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MasterARAppClip.entitlements; sourceTree = "<group>"; };
+		A1000000000000000000000B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000000000000000000000C /* MasterARApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MasterARApp.entitlements; path = MasterARApp/MasterARApp.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -32,6 +73,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-MasterARApp.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000022 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,8 +94,24 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				A1000000000000000000000C /* MasterARApp.entitlements */,
 			);
 			name = MasterARApp;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000003 /* MasterARAppClip */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000004 /* AppClipApp.swift */,
+				A10000000000000000000005 /* Campaign.swift */,
+				A10000000000000000000006 /* AppClipExperienceModel.swift */,
+				A10000000000000000000007 /* ContentView.swift */,
+				A10000000000000000000008 /* NativeImageTrackingView.swift */,
+				A1000000000000000000000B /* Assets.xcassets */,
+				A10000000000000000000009 /* Info.plist */,
+				A1000000000000000000000A /* MasterARAppClip.entitlements */,
+			);
+			path = MasterARAppClip;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -70,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAE1A68108700A75B9A /* MasterARApp */,
+				A10000000000000000000003 /* MasterARAppClip */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -84,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* MasterARApp.app */,
+				A10000000000000000000002 /* MasterARAppClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -111,15 +177,34 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
 				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				A10000000000000000000024 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A10000000000000000000032 /* PBXTargetDependency */,
 			);
 			name = MasterARApp;
 			productName = MasterARApp;
 			productReference = 13B07F961A680F5B00A75B9A /* MasterARApp.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A10000000000000000000001 /* MasterARAppClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000043 /* Build configuration list for PBXNativeTarget "MasterARAppClip" */;
+			buildPhases = (
+				A10000000000000000000021 /* Sources */,
+				A10000000000000000000022 /* Frameworks */,
+				A10000000000000000000023 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MasterARAppClip;
+			productName = MasterARAppClip;
+			productReference = A10000000000000000000002 /* MasterARAppClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
 /* End PBXNativeTarget section */
 
@@ -131,6 +216,10 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
+					};
+					A10000000000000000000001 = {
+						CreatedOnToolsVersion = 26.4.1;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -148,6 +237,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* MasterARApp */,
+				A10000000000000000000001 /* MasterARAppClip */,
 			);
 		};
 /* End PBXProject section */
@@ -159,6 +249,14 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A10000000000000000000023 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000016 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +346,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A10000000000000000000021 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000011 /* AppClipApp.swift in Sources */,
+				A10000000000000000000012 /* Campaign.swift in Sources */,
+				A10000000000000000000013 /* AppClipExperienceModel.swift in Sources */,
+				A10000000000000000000014 /* ContentView.swift in Sources */,
+				A10000000000000000000015 /* NativeImageTrackingView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A10000000000000000000032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A10000000000000000000001 /* MasterARAppClip */;
+			targetProxy = A10000000000000000000031 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
@@ -256,6 +374,7 @@
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-MasterARApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MasterARApp/MasterARApp.entitlements;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
@@ -286,6 +405,7 @@
 			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-MasterARApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MasterARApp/MasterARApp.entitlements;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = MasterARApp/Info.plist;
@@ -448,6 +568,64 @@
 			};
 			name = Release;
 		};
+		A10000000000000000000041 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CAMPAIGN_API_BASE_URL = "https://ar.yourdomain.com/api/clients/";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MasterARAppClip/MasterARAppClip.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = MasterARAppClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.MasterARApp.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A10000000000000000000042 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CAMPAIGN_API_BASE_URL = "https://ar.yourdomain.com/api/clients/";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MasterARAppClip/MasterARAppClip.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				INFOPLIST_FILE = MasterARAppClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.MasterARApp.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -456,6 +634,15 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000043 /* Build configuration list for PBXNativeTarget "MasterARAppClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000041 /* Debug */,
+				A10000000000000000000042 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
