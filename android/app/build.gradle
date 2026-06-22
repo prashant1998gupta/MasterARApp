@@ -120,4 +120,13 @@ dependencies {
     implementation project(':gvr_common')
     implementation project(':arcore_client')
     implementation project(':react_viro')
+    implementation project(':viro_renderer')
+    
+    // ViroReact Transitive Dependencies for video rendering & AR tracking
+    implementation 'androidx.media3:media3-exoplayer:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.1.1'
+    implementation 'androidx.media3:media3-exoplayer-smoothstreaming:1.1.1'
+    implementation 'com.google.protobuf.nano:protobuf-javanano:3.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

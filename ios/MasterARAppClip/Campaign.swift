@@ -162,7 +162,7 @@ enum CampaignLoader {
       )!,
       targetImageSHA256: "38a605cb58fb6036d51da4728e73fe55fe5ae739649d9ab9915259428da5d96b",
       videoURL: URL(
-        string: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        string: "https://cdn.jsdelivr.net/gh/prashant1998gupta/AR_ImageTracking@main/videos/Postcard_Optimized.mp4"
       )!,
       physicalWidthMeters: 0.15,
       videoAspectRatio: 16 / 9

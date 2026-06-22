@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Linking,
   Alert,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -37,7 +39,7 @@ const PRESET_CLIENTS: Record<string, ClientARConfig> = {
     id: 'postcard',
     name: 'India Postcard Experience',
     targetImageUrl: 'https://raw.githubusercontent.com/prashant1998gupta/AR_ImageTracking/main/Assets/AR_Assets/India%20Post%20card/Postcard_Target_Image.jpg.jpeg',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    videoUrl: 'https://cdn.jsdelivr.net/gh/prashant1998gupta/AR_ImageTracking@main/videos/Postcard_Optimized.mp4',
     physicalWidth: 0.15,
     videoAspectRatio: 16 / 9,
   },
@@ -114,6 +116,28 @@ export default function App() {
     'Point the camera at the full printed image',
   );
 
+  // Request camera permission on mount (Android)
+  useEffect(() => {
+    const checkAndRequestPermission = async () => {
+      if (Platform.OS === 'android') {
+        const hasPermission = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        if (!hasPermission) {
+          await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: 'Camera Permission Required',
+              message: 'MasterARApp needs access to your camera to show the AR experience.',
+              buttonPositive: 'OK',
+            },
+          );
+        }
+      }
+    };
+    checkAndRequestPermission();
+  }, []);
+
   // 1. Deep linking listener
   useEffect(() => {
     // Process deep link URL
@@ -146,6 +170,29 @@ export default function App() {
 
   // 2. Fetch and register client configuration
   const loadClientExperience = async (clientId: string) => {
+    if (Platform.OS === 'android') {
+      const hasPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      if (!hasPermission) {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission Required',
+            message: 'MasterARApp needs access to your camera to show the AR experience.',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          Alert.alert(
+            'Permission Denied',
+            'Camera permission is required to run the AR experience.',
+          );
+          return;
+        }
+      }
+    }
+
     setAppState('LOADING');
     setStatusMessage('Fetching experience settings...');
 
@@ -232,7 +279,7 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeAreaView style={[styles.root, appState === 'AR_PLAYING' && { backgroundColor: 'transparent' }]}>
       <StatusBar barStyle="light-content" backgroundColor="#0f172a" />
 
       {appState === 'IDLE' && (
