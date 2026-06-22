@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-MasterARApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-MasterARApp.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		205856A25E865A41F0F74D6B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A10000000000000000000011 /* AppClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* AppClipApp.swift */; };
@@ -99,21 +100,6 @@
 			name = MasterARApp;
 			sourceTree = "<group>";
 		};
-		A10000000000000000000003 /* MasterARAppClip */ = {
-			isa = PBXGroup;
-			children = (
-				A10000000000000000000004 /* AppClipApp.swift */,
-				A10000000000000000000005 /* Campaign.swift */,
-				A10000000000000000000006 /* AppClipExperienceModel.swift */,
-				A10000000000000000000007 /* ContentView.swift */,
-				A10000000000000000000008 /* NativeImageTrackingView.swift */,
-				A1000000000000000000000B /* Assets.xcassets */,
-				A10000000000000000000009 /* Info.plist */,
-				A1000000000000000000000A /* MasterARAppClip.entitlements */,
-			);
-			path = MasterARAppClip;
-			sourceTree = "<group>";
-		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +138,21 @@
 				A10000000000000000000002 /* MasterARAppClip.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000003 /* MasterARAppClip */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000004 /* AppClipApp.swift */,
+				A10000000000000000000005 /* Campaign.swift */,
+				A10000000000000000000006 /* AppClipExperienceModel.swift */,
+				A10000000000000000000007 /* ContentView.swift */,
+				A10000000000000000000008 /* NativeImageTrackingView.swift */,
+				A1000000000000000000000B /* Assets.xcassets */,
+				A10000000000000000000009 /* Info.plist */,
+				A1000000000000000000000A /* MasterARAppClip.entitlements */,
+			);
+			path = MasterARAppClip;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -249,6 +250,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				205856A25E865A41F0F74D6B /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,8 +376,8 @@
 			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-MasterARApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MasterARApp/MasterARApp.entitlements;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MasterARApp/MasterARApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = MasterARApp/Info.plist;
@@ -405,8 +407,8 @@
 			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-MasterARApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MasterARApp/MasterARApp.entitlements;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = MasterARApp/MasterARApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = MasterARApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
@@ -490,6 +492,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -498,7 +501,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -555,6 +561,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -563,7 +570,9 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -638,20 +647,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A10000000000000000000043 /* Build configuration list for PBXNativeTarget "MasterARAppClip" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A10000000000000000000041 /* Debug */,
-				A10000000000000000000042 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MasterARApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000043 /* Build configuration list for PBXNativeTarget "MasterARAppClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000041 /* Debug */,
+				A10000000000000000000042 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
