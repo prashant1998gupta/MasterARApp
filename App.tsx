@@ -81,21 +81,28 @@ const DynamicARScene = (props?: any) => {
     props?.sceneNavigator?.viroAppProps?.config ?? null;
   const updateTrackingStatus =
     props?.sceneNavigator?.viroAppProps?.updateTrackingStatus;
+  const [isTracking, setIsTracking] = useState(false);
   const videoAspectRatio = config?.videoAspectRatio ?? 16 / 9;
 
   return (
     <ViroARScene>
       <ViroAmbientLight color="#ffffff" />
       {config && (
-        // ViroARImageMarker tracks the registered "dynamicTarget".
         <ViroARImageMarker
           target={config.trackingTargetName ?? 'dynamicTarget'}
-          onAnchorFound={() => updateTrackingStatus?.('Image found — playing experience')}
-          onAnchorRemoved={() => updateTrackingStatus?.('Point the camera at the full image')}
+          onAnchorFound={() => {
+            updateTrackingStatus?.('Image found — playing experience');
+            setIsTracking(true);
+          }}
+          onAnchorRemoved={() => {
+            updateTrackingStatus?.('Point the camera at the full image');
+            setIsTracking(false);
+          }}
         >
           <ViroVideo
             source={{ uri: config.videoUrl }}
             loop={true}
+            paused={!isTracking}
             width={config.physicalWidth}
             height={config.physicalWidth / videoAspectRatio}
             position={[0, 0.001, 0]}
